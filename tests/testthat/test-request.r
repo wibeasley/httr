@@ -1,11 +1,18 @@
 context("Request")
 
 test_that("status codes returned as expected", {
-
+  
   expect_equal(GET("http://httpbin.org/status/320")$status, 320)
   expect_equal(GET("http://httpbin.org/status/404")$status, 404)
   expect_equal(GET("http://httpbin.org/status/418")$status, 418)
+  
+})
 
+test_that("status messages returned as expected", {  
+  expect_equal(GET("http://httpbin.org/status/200")$headers$statusmessage, "OK\r\n")
+  expect_equal(GET("http://httpbin.org/status/320")$headers$statusmessage, "UNKNOWN\r\n")
+  expect_equal(GET("http://httpbin.org/status/404")$headers$statusmessage, "NOT FOUND\r\n")
+  expect_equal(GET("http://httpbin.org/status/418")$headers$statusmessage, "I'M A TEAPOT\r\n")  
 })
 
 test_that("status converted to errors", {
