@@ -29,19 +29,37 @@ Unlike Curl (and RCurl), all configuration options are per request, not
 per handle.
 }
 \examples{
+#First example: use HTTP
 result_1 <-  GET(
   url = "http://rstudio.com",
 )
 result_1$status_code
 
-cert_location <- system.file("cacert.pem", package="httr")
-curl_options <- RCurl::curlOptions(cainfo=cert_location, sslversion=3)
+
+#Second example: use HTTPS using the SSL certificates provided in httr.
+#   This configuration is scoped for the call.
+cert_location2 <- system.file("cacert.pem", package = "httr")
+curl_options <- RCurl::curlOptions(cainfo = cert_location2, sslversion = 3)
 
 result_2 <- GET(
   url = "https://google.com",
   config = curl_options
 )
 result_2$status_code
+
+#Third example: Like before, but scoped for all subsequent calls.
+cert_location3 <- system.file("cacert.pem", package = "httr")
+config(RCurl::curlOptions(cainfo = cert_location3, sslversion = 3))
+
+result_3a <- GET(
+  url = "https://google.com"
+)
+result_3a$status_code
+
+result_3b <- GET(
+  url = "https://google.com"
+)
+result_3b$status_code
 }
 \seealso{
 \code{\link{set_config}} to set global config defaults, and
@@ -56,4 +74,3 @@ Other ways to set configuration: \code{\link{reset_config}},
   \code{\link{set_config}}; \code{\link{with_config}},
   \code{\link{with_verbose}}
 }
-
